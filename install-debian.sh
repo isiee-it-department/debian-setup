@@ -211,9 +211,11 @@ desktop_apps() {
 
   step "App Flatpak (Flathub)"
   sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-  sudo flatpak install -y --noninteractive flathub \
-    com.bitwarden.desktop com.slack.Slack com.discordapp.Discord com.jgraph.drawio.desktop \
-    || warn "Mot so app Flatpak cai that bai"
+  local app
+  for app in com.bitwarden.desktop com.slack.Slack com.discordapp.Discord com.jgraph.drawio.desktop; do
+    flatpak info "$app" >/dev/null 2>&1 && { info "$app da duoc cai"; continue; }
+    sudo flatpak install -y --noninteractive flathub "$app" || warn "Cai Flatpak that bai: $app"
+  done
 }
 
 # ---------------------------------------------------------------- user tools
